@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:instagram/pages/feed_page.dart';
-import 'package:instagram/pages/login_page.dart';
 
 class AuthService {
   static final _auth = FirebaseAuth.instance;
@@ -20,7 +18,7 @@ class AuthService {
             .collection('/users')
             .document(signedInUser.uid)
             .setData({'name': name, 'email': email, 'profileImageURL': ''});
-        Navigator.pushReplacementNamed(context, FeedPage.id);
+        Navigator.pop(context);
       }
     } catch (e) {
       print(e);

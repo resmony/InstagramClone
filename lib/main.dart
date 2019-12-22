@@ -14,7 +14,8 @@ class MyApp extends StatelessWidget {
       title: 'Instagram Clone',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryIconTheme:
+            Theme.of(context).primaryIconTheme.copyWith(color: Colors.black),
       ),
       home: _getScreenId(),
       routes: {
@@ -30,7 +31,9 @@ class MyApp extends StatelessWidget {
         stream: FirebaseAuth.instance.onAuthStateChanged,
         builder: (BuildContext context, snapshot) {
           if (snapshot.hasData) {
-            return HomePage();
+            return HomePage(
+              userId: snapshot.data.uid,
+            );
           } else {
             return LoginPage();
           }

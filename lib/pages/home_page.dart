@@ -7,7 +7,8 @@ import 'package:instagram/pages/profile_page.dart';
 import 'package:instagram/pages/search_page.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key}) : super(key: key);
+  final String userId;
+  HomePage({Key key, this.userId}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -43,7 +44,7 @@ class _HomePageState extends State<HomePage> {
           SearchPage(),
           CreatePostPage(),
           ActivityPage(),
-          ProfilePage()
+          ProfilePage(userId: widget.userId)
         ],
         onPageChanged: (int index) {
           setState(() {
