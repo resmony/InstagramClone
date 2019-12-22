@@ -52,7 +52,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           children: <Widget>[
             _isLoading
                 ? LinearProgressIndicator(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Colors.blue[200],
                     valueColor: AlwaysStoppedAnimation(Colors.blue),
                   )
                 : SizedBox.shrink(),
