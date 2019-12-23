@@ -17,6 +17,25 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 50.0),
+          child: Center(
+            child: Text(
+              'Instagram',
+              style: TextStyle(
+                  color: Colors.black, fontFamily: 'Billabong', fontSize: 35),
+            ),
+          ),
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.brightness_low),
+            onPressed: () => ('configurations tap'),
+          )
+        ],
+      ),
       backgroundColor: Colors.white,
       body: FutureBuilder(
           future: usersRef.document(widget.userId).get(),

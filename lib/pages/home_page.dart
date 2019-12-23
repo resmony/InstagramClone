@@ -1,14 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram/models/user_data.dart';
 import 'package:instagram/pages/activity_page.dart';
 import 'package:instagram/pages/create_post_page.dart';
 import 'package:instagram/pages/feed_page.dart';
 import 'package:instagram/pages/profile_page.dart';
 import 'package:instagram/pages/search_page.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
-  final String userId;
-  HomePage({Key key, this.userId}) : super(key: key);
+  HomePage({Key key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -27,16 +28,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Center(
-          child: Text(
-            'Instagram',
-            style: TextStyle(
-                color: Colors.black, fontFamily: 'Billabong', fontSize: 35),
-          ),
-        ),
-      ),
       body: PageView(
         controller: _pageController,
         children: <Widget>[
@@ -44,7 +35,7 @@ class _HomePageState extends State<HomePage> {
           SearchPage(),
           CreatePostPage(),
           ActivityPage(),
-          ProfilePage(userId: widget.userId)
+          ProfilePage(userId: Provider.of<UserData>(context).currentUserId)
         ],
         onPageChanged: (int index) {
           setState(() {
@@ -84,7 +75,7 @@ class _HomePageState extends State<HomePage> {
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.notifications,
+                Icons.favorite_border,
                 size: 32,
               ),
             ),

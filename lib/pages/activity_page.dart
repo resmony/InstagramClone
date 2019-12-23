@@ -11,7 +11,19 @@ class _ActivityPageState extends State<ActivityPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       body: Center(child: Text('activity screen'),),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: Center(
+          child: Text(
+            'Instagram',
+            style: TextStyle(
+                color: Colors.black, fontFamily: 'Billabong', fontSize: 35),
+          ),
+        ),
+      ),
+      body: Center(
+        child: Text('activity screen'),
+      ),
     );
   }
 }
