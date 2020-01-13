@@ -14,6 +14,11 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   String _email, _password;
+  var _expReg = new RegExp(
+      r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+',
+      caseSensitive: false,
+      multiLine: false,
+    );
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
                           EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                       child: TextFormField(
                         decoration: InputDecoration(labelText: 'Email'),
-                        validator: (input) => !input.contains('@')
+                        validator: (input) => !_expReg.hasMatch(input)
                             ? 'Please enter a valid email'
                             : null,
                         onSaved: (input) => _email = input,

@@ -13,6 +13,11 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
   String _name, _email, _password;
+  var _expReg = new RegExp(
+    r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+',
+    caseSensitive: false,
+    multiLine: false,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +54,7 @@ class _SignupPageState extends State<SignupPage> {
                           EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                       child: TextFormField(
                         decoration: InputDecoration(labelText: 'Email'),
-                        validator: (input) => !input.contains('@')
+                        validator: (input) => !_expReg.hasMatch(input)
                             ? 'Please enter a valid email'
                             : null,
                         onSaved: (input) => _email = input,
@@ -90,8 +95,7 @@ class _SignupPageState extends State<SignupPage> {
                       width: 250,
                       child: FlatButton(
                         padding: EdgeInsets.all(10),
-                        onPressed: () =>
-                            Navigator.pop(context),
+                        onPressed: () => Navigator.pop(context),
                         color: Colors.blue,
                         child: Text('Back to Login',
                             style: TextStyle(

@@ -1,19 +1,116 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram/models/user_data.dart';
 import 'package:instagram/models/user_model.dart';
 import 'package:instagram/pages/edit_profile_page.dart';
+import 'package:instagram/services/database_service.dart';
 import 'package:instagram/utils/constants.dart';
+import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
   final String userId;
+  final String currentUserId;
 
-  ProfilePage({Key key, this.userId}) : super(key: key);
+  ProfilePage({Key key, this.userId, this.currentUserId}) : super(key: key);
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  bool isFollowing = false;
+  int followingCount = 0;
+  int followersCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _setupIsFollowing();
+    _setupFollowing();
+    _setupFollowers();
+  }
+
+  _setupIsFollowing() async {
+    bool isFollowingUser = await DatabaseService.isFollowingUser(
+        currentUserId: widget.currentUserId, userId: widget.userId);
+    setState(() {
+      isFollowing = isFollowingUser;
+    });
+  }
+
+  _setupFollowers() async {
+    int userFollowerCount = await DatabaseService.numFollowers(widget.userId);
+    setState(() {
+      followersCount = userFollowerCount;
+    });
+  }
+
+  _setupFollowing() async {
+    int userFollowingCount = await DatabaseService.numFollowing(widget.userId);
+    setState(() {
+      followingCount = userFollowingCount;
+    });
+  }
+
+  _followOrUnfollow() {
+    if (isFollowing) {
+  _unfollowUser();
+    } else {
+      _followUser();
+    }
+  }
+
+  _unfollowUser() {
+    DatabaseService.unfollowUser(currentUserId: widget.currentUserId, userId:widget.userId);
+    setState(() {
+      isFollowing = false;
+      followersCount--;
+    });
+  }
+
+  _followUser() {
+    DatabaseService.followUser(currentUserId: widget.currentUserId, userId:widget.userId);
+    setState(() {
+      isFollowing = true;
+      followersCount++;
+    });
+  }
+ 
+  _displayButton(User user) {
+    return user.id == Provider.of<UserData>(context).currentUserId
+        ? Container(
+            width: 190,
+            child: FlatButton(
+              color: Colors.blue,
+              textColor: Colors.white,
+              child: Text(
+                'Edit profile',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+              onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => EditProfilePage(user: user))),
+            ),
+          )
+        : Container(
+            width: 190,
+            child: FlatButton(
+              color: isFollowing ? Colors.grey[200] : Colors.blue,
+              textColor: isFollowing ? Colors.black : Colors.white,
+              child: Text(
+                isFollowing ? 'Unfollow' : 'Follow',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+              onPressed: _followOrUnfollow,
+            ),
+          );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,12 +126,15 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.brightness_low),
-            onPressed: () => ('configurations tap'),
-          )
-        ],
+        //centerTitle: true,
+        actions: widget.currentUserId == widget.userId
+            ? <Widget>[
+                IconButton(
+                  icon: Icon(Icons.brightness_low),
+                  onPressed: () => ('configurations tap'),
+                )
+              ]
+            : null,
       ),
       backgroundColor: Colors.white,
       body: FutureBuilder(
@@ -79,7 +179,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                                 Column(
                                   children: <Widget>[
-                                    Text('635',
+                                    Text(followersCount.toString(),
                                         style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w600)),
@@ -90,7 +190,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                                 Column(
                                   children: <Widget>[
-                                    Text('145',
+                                    Text(followingCount.toString(),
                                         style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w600)),
@@ -101,24 +201,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 )
                               ],
                             ),
-                            Container(
-                              width: 190,
-                              child: FlatButton(
-                                color: Colors.blue,
-                                textColor: Colors.white,
-                                child: Text(
-                                  'Edit profile',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                  ),
-                                ),
-                                onPressed: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) =>
-                                            EditProfilePage(user: user))),
-                              ),
-                            )
+                            _displayButton(user)
                           ],
                         ),
                       )

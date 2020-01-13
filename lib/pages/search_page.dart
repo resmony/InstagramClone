@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram/models/user_data.dart';
 import 'package:instagram/models/user_model.dart';
 import 'package:instagram/pages/profile_page.dart';
 import 'package:instagram/services/database_service.dart';
 import 'package:instagram/utils/media_helper.dart';
+import 'package:provider/provider.dart';
 
 class SearchPage extends StatefulWidget {
   SearchPage({Key key}) : super(key: key);
@@ -26,7 +28,7 @@ class _SearchPageState extends State<SearchPage> {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => ProfilePage(userId: user.id),
+          builder: (_) => ProfilePage(currentUserId: Provider.of<UserData>(context).currentUserId, userId: user.id),
         ),
       ),
     );

@@ -27,6 +27,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final String currentUserId = Provider.of<UserData>(context).currentUserId;
+
     return Scaffold(
       body: PageView(
         controller: _pageController,
@@ -35,7 +37,7 @@ class _HomePageState extends State<HomePage> {
           SearchPage(),
           CreatePostPage(),
           ActivityPage(),
-          ProfilePage(userId: Provider.of<UserData>(context).currentUserId)
+          ProfilePage(userId: currentUserId, currentUserId: currentUserId,)
         ],
         onPageChanged: (int index) {
           setState(() {
@@ -67,7 +69,7 @@ class _HomePageState extends State<HomePage> {
                 size: 32,
               ),
             ),
-            BottomNavigationBarItem(
+          BottomNavigationBarItem(
               icon: Icon(
                 Icons.photo_camera,
                 size: 32,
